@@ -1,0 +1,17 @@
+{% extends "layout/layout.html" %}
+{% block static %}
+
+<title>Sample</title>
+
+<!-- เพิ่มที่อยู่ไฟล์ CSS ที่นี่ -->
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/layout/layout.css') }}"> -->
+
+{% endblock %}
+{% block content %}
+
+<h1>This Sample Page</h1>
+
+<!-- เพิ่มที่อยู่ไฟล์ js ที่นี่ -->
+<script src="{{ url_for('static', filename='js/sample/sample.js') }}"></script>
+
+{% endblock %}

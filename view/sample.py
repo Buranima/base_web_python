@@ -1,0 +1,39 @@
+from flask import Flask, render_template,url_for,redirect,session,request,jsonify,flash,make_response,send_file, Blueprint
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import pymysql
+import os
+import bcrypt
+
+sample_Page = Blueprint('sample_Page',__name__)
+
+load_dotenv()
+con = pymysql.connect(host=os.environ['ipaddress'],
+                             user=os.environ['usernamedb'],
+                             password=os.environ['passworddb'],
+                             database=os.environ['dbanme'],
+                             port=int(os.environ['portdb']),
+                             connect_timeout=10,
+                             read_timeout=10)
+def db_connect():
+    global con
+    if not con.open:
+        con = pymysql.connect(host=os.environ['ipaddress'],
+                             user=os.environ['usernamedb'],
+                             password=os.environ['passworddb'],
+                             database=os.environ['dbanme'],
+                             port=int(os.environ['portdb']),
+                             connect_timeout=100,
+                             read_timeout=100)
+    return con
+
+@sample_Page.route('/sample')
+def sample_View():
+    return render_template('sample/sample.html')
+    # return redirect(url_for('home'))
+
+@sample_Page.route('/sample_text', methods=['POST'])
+def sample_Ajax():
+    date = request.get_json()
+    text = date.get('text')
+    return jsonify({'text': text + ' from Ajax'})
