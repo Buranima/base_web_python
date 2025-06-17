@@ -32,6 +32,9 @@ pip install -r requirements.txt
 5. รันโปรเจกต์
 python main.py
 
+6. หากต้องการเก็บแพ็คเกจและไลบรารี่ต่างๆ
+pip freeze > requirements.txt
+
 ---
 
 ### สำหรับ Linux / macOS
@@ -51,6 +54,9 @@ pip install -r requirements.txt
 
 5. รันโปรเจกต์
 python3 main.py
+
+6. หากต้องการเก็บแพ็คเกจและไลบรารี่ต่างๆ
+pip freeze > requirements.txt
 
 ---
 
