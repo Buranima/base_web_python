@@ -4,6 +4,7 @@
 *.pyc
 *.pyo
 *.pyd
+**/tempCodeRunnerFile.py
 __pycache__/
 
 # ----------------------------------------

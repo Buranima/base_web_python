@@ -1,5 +1,6 @@
 from flask import Flask, render_template,url_for,redirect,session,request,jsonify,flash,make_response,send_file, Blueprint
 from datetime import datetime, timedelta
+from backend.socketio.socketio import socketio
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -36,10 +37,12 @@ app.permanent_session_lifetime = timedelta(days=1) # กำหนดอายุ
 # เพิ่มเติม Blueprint
 app.register_blueprint(sample_Page)
 
+socketio.init_app(app)
+
 # กำหนดเส้นทางหลัก
 @app.route('/')
 def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)

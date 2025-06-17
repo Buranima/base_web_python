@@ -1,5 +1,6 @@
 from flask import Flask, render_template,url_for,redirect,session,request,jsonify,flash,make_response,send_file, Blueprint
 from datetime import datetime, timedelta
+from backend.socketio.socketio import socketio
 from dotenv import load_dotenv
 import pymysql
 import os
@@ -34,6 +35,12 @@ def sample_View():
 
 @sample_Page.route('/sample_text', methods=['POST'])
 def sample_Ajax():
-    date = request.get_json()
-    text = date.get('text')
+    data = request.get_json()
+    text = data.get('text')
     return jsonify({'text': text + ' from Ajax'})
+
+@socketio.on('test')
+def test_Socketio(data):
+    text = data.get('text')
+    socketio.emit('test', {'test': text + ' from Socketio'})
+    # socketio.emit('test', {'test': text + ' from Socketio'}, skip_sid=request.sid)
