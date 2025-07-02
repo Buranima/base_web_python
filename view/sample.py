@@ -6,14 +6,18 @@ import pymysql
 import os
 import bcrypt
 
+# เรีกก์ใช้งาน Blueprint
 sample_Page = Blueprint('sample_Page',__name__)
 
+# โหลดตัวแปรสภาพแวดล้อมจากไฟล์ .env
 load_dotenv()
+
 con = pymysql.connect(host=os.environ['ipaddress'],
                              user=os.environ['usernamedb'],
                              password=os.environ['passworddb'],
                              database=os.environ['dbanme'],
                              port=int(os.environ['portdb']),
+                             cursorclass=pymysql.cursors.DictCursor,
                              connect_timeout=10,
                              read_timeout=10)
 def db_connect():
@@ -24,10 +28,12 @@ def db_connect():
                              password=os.environ['passworddb'],
                              database=os.environ['dbanme'],
                              port=int(os.environ['portdb']),
+                             cursorclass=pymysql.cursors.DictCursor,
                              connect_timeout=100,
                              read_timeout=100)
     return con
 
+# กำหนดเส้นทางสำหรับ Blueprint
 @sample_Page.route('/sample')
 def sample_View():
     return render_template('sample/sample.html')
