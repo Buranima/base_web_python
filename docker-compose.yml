@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: my_app
+    restart: always
+    ports:
+      - 8080:5000
+    volumes:
+        - ./templates:/app/templates
+        - ./static:/app/static
+        - ./view:/app/view
+        - ./upload:/app/upload
+    environment:
+      - ipaddress=${ipaddress}
+      - usernamedb=${usernamedb}
+      - passworddb=${passworddb}
+      - dbanme=${dbanme}
+      - portdb=${portdb}
+    command: ["python3", "main.py"]

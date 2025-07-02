@@ -14,26 +14,26 @@ from view.sample import sample_Page
 load_dotenv()
 
 # กำหนดการเชื่อมต่อฐานข้อมูล
-con = pymysql.connect(host=os.environ['ipaddress'],
-                             user=os.environ['usernamedb'],
-                             password=os.environ['passworddb'],
-                             database=os.environ['dbanme'],
-                             port=int(os.environ['portdb']),
-                             cursorclass=pymysql.cursors.DictCursor,
-                             connect_timeout=10,
-                             read_timeout=10)
-def db_connect():
-    global con
-    if not con.open:
-        con = pymysql.connect(host=os.environ['ipaddress'],
-                             user=os.environ['usernamedb'],
-                             password=os.environ['passworddb'],
-                             database=os.environ['dbanme'],
-                             port=int(os.environ['portdb']),
-                             cursorclass=pymysql.cursors.DictCursor,
-                             connect_timeout=100,
-                             read_timeout=100)
-    return con
+# con = pymysql.connect(host=os.environ['ipaddress'],
+#                              user=os.environ['usernamedb'],
+#                              password=os.environ['passworddb'],
+#                              database=os.environ['dbanme'],
+#                              port=int(os.environ['portdb']),
+#                              cursorclass=pymysql.cursors.DictCursor,
+#                              connect_timeout=10,
+#                              read_timeout=10)
+# def db_connect():
+#     global con
+#     if not con.open:
+#         con = pymysql.connect(host=os.environ['ipaddress'],
+#                              user=os.environ['usernamedb'],
+#                              password=os.environ['passworddb'],
+#                              database=os.environ['dbanme'],
+#                              port=int(os.environ['portdb']),
+#                              cursorclass=pymysql.cursors.DictCursor,
+#                              connect_timeout=100,
+#                              read_timeout=100)
+#     return con
 
 app = Flask(__name__)
 
@@ -58,4 +58,4 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True, allow_unsafe_werkzeug=True)

@@ -67,14 +67,17 @@ pip freeze > requirements.txt
 ├── main.py                 # ไฟล์หลักสำหรับรันระบบ
 ├── README.md               # ไฟล์แนะนำโปรเจกต์นี้
 ├── requirements.txt        # รายการไลบรารี
-├── templates/              # แม่แบบ HTML (หากใช้ Flask)
+├── Dockerfile              # ไฟล์สำหรับสร้าง Docker image
+├── docker-compose.yml      # ไฟล์สำหรับจัดการ container ด้วย Docker Compose
+├── templates/              # แม่แบบ HTML
     ├── index.html          # หน้าแรก
     └── layout/             # แม่แบบหลัก
 ├── static/                 # ไฟล์สื่อที่ไม่เปลี่ยนแปลง เช่น CSS, JS, img
     ├── css/                # รวมไฟล์ CSS
     ├── js/                 # รวมไฟล์ js
     └── img/                # รวมไฟล์ img
-├── view/                   # ส่วนแสดงผล (หากใช้ Flask)
+├── view/                   # ส่วนแสดงผล
+├── upload/                 # โฟลเดอร์สำหรับอัพโหลดไฟล์
 ├── venv/                   # Virtual environment
 └── .env                    # เก็บข้อมูลลับ เช่น token
 
@@ -87,5 +90,95 @@ pip freeze > requirements.txt
 2. ใช้ .env สำหรับข้อมูลลับ เช่น DATABASE, SECRET_KEY
 
 3. ถ้าใช้ Git ควรมี .gitignore เพื่อไม่รวมไฟล์สำคัญ เช่น .env, venv/, *.pyc
+
+---
+
+## 🐋 คำแนะนำการใช้งาน Docker เบื้องต้น
+
+Docker คือเครื่องมือที่ใช้สำหรับ "บรรจุแอปพลิเคชัน + dependency ทั้งหมด" ไว้ใน container (เหมือนกล่องแอปที่พกพาได้)
+
+### ตัวอย่าง Dockerfile
+
+1. ใช้ Python image
+FROM python:3.12.10
+
+2. กำหนด working directory
+WORKDIR /app
+
+3. คัดลอกไฟล์ไปไว้ใน container
+COPY . /app
+
+4. ติดตั้ง dependency
+RUN pip install --no-cache-dir -r requirements.txt
+
+5. เปิดพอร์ต
+EXPOSE 5000
+
+6. รันแอป
+CMD ["python3", "main.py"]
+
+### ตัวอย่าง docker-compose.yml
+
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: my_app
+    restart: always
+    ports:
+      - 8080:5000
+    volumes:
+        - ./templates:/app/templates
+        - ./static:/app/static
+        - ./view:/app/view
+        - ./upload:/app/upload
+    environment:
+      - ipaddress=${ipaddress}
+      - usernamedb=${usernamedb}
+      - passworddb=${passworddb}
+      - dbanme=${dbanme}
+      - portdb=${portdb}
+    command: ["python3", "main.py"]
+
+### คำสั่ง Docker เบื้องต้น
+
+1. ดู container ที่กำลังรัน
+sudo docker ps
+
+2. ดู images ที่มีอยู่
+sudo docker images
+
+3. ดู log ของ container
+sudo docker logs "ชื่อ container หรือ ID"
+
+4. ดู log แบบเรียลไทม์
+sudo docker logs -f "ชื่อ container หรือ ID"
+
+5. เข้าไปใน container
+sudo docker exec -it "ชื่อ container หรือ ID" bash
+
+6. เข้าไปใน container ด้วยสิทธิ์ root
+docker exec -it --user root "ชื่อ container หรือ ID" bash
+
+6. restart container
+sudo docker restart "ชื่อ container หรือ ID"
+
+7. start container
+sudo docker start "ชื่อ container หรือ ID"
+
+8. stop container
+sudo docker stop "ชื่อ container หรือ ID"
+
+9. ลบ container
+sudo docker rm "ชื่อ container หรือ ID"
+
+10. ลบ image
+sudo docker rmi "ชื่อ image หรือ ID"
+
+11. สร้างและรัน container ด้วย Docker Compose
+sudo docker-compose up -d --build
+
+12. สร้าง image จาก Dockerfile
+sudo docker build -t "ชื่อ image" .
 
 ---
