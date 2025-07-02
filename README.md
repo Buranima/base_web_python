@@ -47,7 +47,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 3. อัพเดต pip
-python3.exe -m pip install --upgrade pip
+python3 -m pip install --upgrade pip
 
 4. ติดตั้งไลบรารี
 pip install -r requirements.txt
