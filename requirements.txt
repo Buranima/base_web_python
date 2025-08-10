@@ -11,11 +11,13 @@ greenlet==3.2.3
 h11==0.16.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
+numpy==2.3.1
 MarkupSafe==3.0.2
 PyMySQL==1.1.1
 python-dotenv==1.1.0
 python-engineio==4.12.2
 python-socketio==5.13.0
+requests==2.32.4
 simple-websocket==1.1.0
 websocket-client==1.8.0
 Werkzeug==3.1.3
