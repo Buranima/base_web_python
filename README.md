@@ -181,4 +181,75 @@ sudo docker-compose up -d --build
 12. สร้าง image จาก Dockerfile
 sudo docker build -t "ชื่อ image" .
 
+### Cloudflare Tunnel สำหรับเชื่อมต่อแอปผ่านโดเมนเนม
+
+1. ติดตั้ง cloudflared
+sudo apt update
+sudo apt install cloudflared -y
+
+ตรวจสอบว่าใช้ได้หรือไม่
+cloudflared --version
+
+2. ล็อกอินกับ Cloudflare Account
+cloudflared tunnel login
+
+ระบบจะเปิดเบราว์เซอร์ให้ล็อกอิน Cloudflare
+แล้วให้คุณเลือกโดเมน (เช่น comeng-kbu.com)
+หลังจากกดอนุญาต จะมีไฟล์ credentials ถูกสร้างไว้ที่ ~/.cloudflared/(UUID).json
+
+3. สร้าง Tunnel ใหม่
+cloudflared tunnel create (ชื่อ tunnel)
+
+ผลลัพธ์จะได้ประมาณนี้
+Tunnel credentials written to /home/admin_comeng/.cloudflared/(UUID).json
+Created tunnel comeng-kbu with id (UUID)
+
+4. สร้างไฟล์ config.yml
+sudo nano /etc/cloudflared/config.yml
+
+ใส่เนื้อหานี้
+tunnel: comeng-kbu
+credentials-file: /home/admin_comeng/.cloudflared/(UUID).json
+
+ingress:
+  - hostname: kbubot.comeng-kbu.com
+    service: http://localhost:5005
+
+  - service: http_status:404
+
+ปรับ hostname กับ port ให้ตรงกับเว็บที่คุณต้องการเปิด
+กด Ctrl + O, Enter, Ctrl + X เพื่อบันทึก
+
+5. เชื่อม DNS โดเมนกับ Tunnel
+cloudflared tunnel route dns comeng-kbu kbubot.comeng-kbu.com
+
+Cloudflare จะสร้าง CNAME ให้อัตโนมัติ
+ชี้ไปยัง (UUID).cfargotunnel.com
+
+6. ทดสอบรัน Tunnel
+cloudflared tunnel run comeng-kbu
+
+จะเห็น log ประมาณนี้
+INF Starting tunnel comeng-kbu
+INF Connected to Cloudflare edge
+INF Route established kbubot.comeng-kbu.com → http://localhost:5005
+
+7. ตั้งค่าให้รันอัตโนมัติเมื่อบูตเครื่อง
+sudo cloudflared service install
+sudo systemctl enable cloudflared
+sudo systemctl start cloudflared
+
+ตรวจสอบสถานะ
+sudo systemctl status cloudflared
+
+ถ้าเห็น “active (running)” ถือว่าเรียบร้อย
+
+8. ตรวจสอบ log / debug
+sudo journalctl -u cloudflared -f
+
+จะเห็นทุกการเชื่อมต่อแบบ realtime
+
+9. หยุดบริการ
+sudo systemctl stop cloudflared
+
 ---
