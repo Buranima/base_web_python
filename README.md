@@ -252,4 +252,7 @@ sudo journalctl -u cloudflared -f
 9. หยุดบริการ
 sudo systemctl stop cloudflared
 
+10. เริ่มบริการใหม่
+sudo systemctl start cloudflared
+
 ---
